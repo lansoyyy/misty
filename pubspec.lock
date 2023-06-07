@@ -75,6 +75,22 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  geekyants_flutter_gauges:
+    dependency: "direct main"
+    description:
+      name: geekyants_flutter_gauges
+      sha256: "037cbeda8c50bae09ca430478d1f4148536de16772ea8136ea0c633f001ff0e2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.18.1"
   js:
     dependency: transitive
     description:
@@ -123,6 +139,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.2"
+  pretty_gauge:
+    dependency: "direct main"
+    description:
+      name: pretty_gauge
+      sha256: c87f5d1706ed0ce8fb8ef6e04633133ef78ae0653221bd100c0ba8708b6baf80
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -160,6 +184,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  syncfusion_flutter_core:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_core
+      sha256: "4aa69e3541d38810533b1455aa38997a89755f9928e16ef813b62b2e8bcc398c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "21.2.9"
+  syncfusion_flutter_gauges:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_gauges
+      sha256: "7306fcf8d4d1d526c923dc94a7df7425cf7f253fa4ca2a8c5e048a5e2edc8ea6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "21.2.9"
   term_glyph:
     dependency: transitive
     description:
@@ -184,5 +224,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  wi_custom_bar:
+    dependency: "direct main"
+    description:
+      name: wi_custom_bar
+      sha256: "153a93e7fbe3f26a69760011a5f1dcee7c23758e081018beab29325ac09cee03"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1"
 sdks:
   dart: ">=2.19.6 <3.0.0"
+  flutter: ">=1.17.0"
