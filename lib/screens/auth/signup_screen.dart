@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:misty/screens/home_screen.dart';
+import 'package:misty/screens/auth/login_screen.dart';
 import 'package:misty/widgets/button_widget.dart';
 import 'package:misty/widgets/text_widget.dart';
 import 'package:misty/widgets/textfield_widget.dart';
+
+import '../../widgets/toast_widget.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -18,7 +21,7 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             const SizedBox(
@@ -76,8 +79,7 @@ class _SignupScreenState extends State<SignupScreen> {
               color: Colors.green,
               label: 'CREATE USER',
               onPressed: () {
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const HomeScreen()));
+                register(context);
               },
             ),
             const SizedBox(
@@ -109,5 +111,29 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
       ),
     );
+  }
+
+  register(context) async {
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text, password: passController.text);
+
+      showToast(
+          'Account created succesfully! Login your account to continue..');
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        showToast('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        showToast('The account already exists for that email.');
+      } else if (e.code == 'invalid-email') {
+        showToast('The email address is not valid.');
+      } else {
+        showToast(e.toString());
+      }
+    } on Exception catch (e) {
+      showToast("An error occurred: $e");
+    }
   }
 }

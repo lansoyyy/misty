@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:misty/screens/home_screen.dart';
+import 'package:misty/screens/auth/login_screen.dart';
 import 'package:misty/widgets/button_widget.dart';
 import 'package:misty/widgets/text_widget.dart';
 import 'package:misty/widgets/textfield_widget.dart';
+
+import '../../widgets/toast_widget.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -17,7 +20,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
           children: [
             const SizedBox(
@@ -74,8 +77,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               color: Colors.green,
               label: 'RESET',
               onPressed: () {
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const HomeScreen()));
+                forgotpassword(context);
               },
             ),
             const SizedBox(
@@ -107,5 +109,30 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
       ),
     );
+  }
+
+  forgotpassword(context) async {
+    try {
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: emailController.text);
+
+      showToast('Password reset link was sent to ${emailController.text}');
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        showToast("No user found with that email.");
+      } else if (e.code == 'wrong-password') {
+        showToast("Wrong password provided for that user.");
+      } else if (e.code == 'invalid-email') {
+        showToast("Invalid email provided.");
+      } else if (e.code == 'user-disabled') {
+        showToast("User account has been disabled.");
+      } else {
+        showToast("An error occurred: ${e.message}");
+      }
+    } on Exception catch (e) {
+      showToast("An error occurred: $e");
+    }
   }
 }
