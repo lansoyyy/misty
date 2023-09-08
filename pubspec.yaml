@@ -39,6 +39,11 @@ dependencies:
   syncfusion_flutter_gauges:
   pretty_gauge:
   geekyants_flutter_gauges:
+  fluttertoast:
+  firebase_core:
+  cloud_firestore:
+  firebase_storage:
+  firebase_auth:
 
 dev_dependencies:
   flutter_test:
