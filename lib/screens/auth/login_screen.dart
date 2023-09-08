@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:misty/screens/auth/forgotpassword_screen.dart';
+import 'package:misty/screens/auth/signup_screen.dart';
 import 'package:misty/screens/home_screen.dart';
 import 'package:misty/widgets/button_widget.dart';
 import 'package:misty/widgets/text_widget.dart';
@@ -79,7 +81,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const ForgotPasswordScreen()));
+                    },
                     child: TextBold(
                       text: 'Forgot Password?',
                       fontSize: 12,
@@ -102,7 +107,21 @@ class _LoginScreenState extends State<LoginScreen> {
               },
             ),
             const SizedBox(
-              height: 75,
+              height: 30,
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const SignupScreen()));
+              },
+              child: TextBold(
+                text: 'Sign up here!',
+                fontSize: 18,
+                color: Colors.green,
+              ),
+            ),
+            const SizedBox(
+              height: 50,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
