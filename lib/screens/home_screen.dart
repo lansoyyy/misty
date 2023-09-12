@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:geekyants_flutter_gauges/geekyants_flutter_gauges.dart';
 import 'package:misty/widgets/text_widget.dart';
@@ -21,159 +22,148 @@ class _HomeScreenState extends State<HomeScreen> {
   Random random = Random();
   String control = 'OFF';
 
+  var hasLoaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  int hum = 0;
+  int temp = 0;
+  bool status = false;
+
+  getData() async {
+    FirebaseDatabase.instance
+        .ref('DHT_Humidity')
+        .onValue
+        .listen((DatabaseEvent event) async {
+      final dynamic data = event.snapshot.value;
+
+      hum = int.parse(data['Hum_Val']);
+    });
+
+    FirebaseDatabase.instance
+        .ref('DHT_Temperature')
+        .onValue
+        .listen((DatabaseEvent event) async {
+      final dynamic data = event.snapshot.value;
+
+      temp = int.parse(data['Tempt_Val']);
+    });
+
+    FirebaseDatabase.instance
+        .ref('System_Status')
+        .onValue
+        .listen((DatabaseEvent event) async {
+      final dynamic data = event.snapshot.value;
+
+      status = data['SS_bool'];
+    });
+
+    setState(() {
+      hasLoaded = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    int temp = random.nextInt(20);
-    double humid = random.nextDouble() * 100;
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, top: 10),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: IconButton(
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                                title: const Text(
-                                  'Logout Confirmation',
-                                  style: TextStyle(
-                                      fontFamily: 'QBold',
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                content: const Text(
-                                  'Are you sure you want to Logout?',
-                                  style: TextStyle(fontFamily: 'QRegular'),
-                                ),
-                                actions: <Widget>[
-                                  MaterialButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(true),
-                                    child: const Text(
-                                      'Close',
-                                      style: TextStyle(
-                                          fontFamily: 'QRegular',
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  MaterialButton(
-                                    onPressed: () async {
-                                      await FirebaseAuth.instance.signOut();
-                                      Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const LoginScreen()));
-                                    },
-                                    child: const Text(
-                                      'Continue',
-                                      style: TextStyle(
-                                          fontFamily: 'QRegular',
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ],
-                              ));
-                    },
-                    icon: const Icon(
-                      Icons.logout,
-                    ),
-                  ),
-                ),
-              ),
-              const Divider(
-                color: Colors.black,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextBold(
-                text: 'TEMPERATURE',
-                fontSize: 28,
-                color: Colors.black,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              // Temp
-              Container(
-                width: 300,
-                height: 200,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: hasLoaded
+          ? SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    TemperatureVerticalBar(100, temp + 35,
-                        baseBgColor: Colors.white),
-                    Container(
-                      width: 150,
-                      height: 75,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child: TextBold(
-                            text: '${temp + 35}° Celsius',
-                            fontSize: 18,
-                            color: Colors.grey),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10, top: 10),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: IconButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      title: const Text(
+                                        'Logout Confirmation',
+                                        style: TextStyle(
+                                            fontFamily: 'QBold',
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      content: const Text(
+                                        'Are you sure you want to Logout?',
+                                        style:
+                                            TextStyle(fontFamily: 'QRegular'),
+                                      ),
+                                      actions: <Widget>[
+                                        MaterialButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(true),
+                                          child: const Text(
+                                            'Close',
+                                            style: TextStyle(
+                                                fontFamily: 'QRegular',
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        MaterialButton(
+                                          onPressed: () async {
+                                            await FirebaseAuth.instance
+                                                .signOut();
+                                            Navigator.of(context).pushReplacement(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const LoginScreen()));
+                                          },
+                                          child: const Text(
+                                            'Continue',
+                                            style: TextStyle(
+                                                fontFamily: 'QRegular',
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ],
+                                    ));
+                          },
+                          icon: const Icon(
+                            Icons.logout,
+                          ),
+                        ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              TextBold(
-                text: 'HUMIDITY',
-                fontSize: 28,
-                color: Colors.black,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-
-              Container(
-                width: 300,
-                height: 225,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  child: Column(
-                    children: [
-                      Row(
+                    const Divider(
+                      color: Colors.black,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextBold(
+                      text: 'TEMPERATURE',
+                      fontSize: 28,
+                      color: Colors.black,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    // Temp
+                    Container(
+                      width: 300,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          PrettyGauge(
-                            showMarkers: true,
-                            gaugeSize: 125,
-                            segments: [
-                              GaugeSegment('DRY', 20, Colors.red),
-                              GaugeSegment('NORMAL', 40, Colors.green),
-                              GaugeSegment('WET', 40, Colors.blue),
-                            ],
-                            currentValue: humid,
-                            displayWidget: const Text(
-                              'HUMIDITY',
-                              style: TextStyle(fontSize: 12),
-                            ),
-                          ),
+                          TemperatureVerticalBar(100, temp,
+                              baseBgColor: Colors.white),
                           Container(
-                            width: 75,
+                            width: 150,
                             height: 75,
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -181,80 +171,154 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             child: Center(
                               child: TextBold(
-                                  text: '${humid.toStringAsFixed(2)}%',
+                                  text: '$temp° Celsius',
                                   fontSize: 18,
                                   color: Colors.grey),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 20,
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    TextBold(
+                      text: 'HUMIDITY',
+                      fontSize: 28,
+                      color: Colors.black,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+
+                    Container(
+                      width: 300,
+                      height: 225,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      LinearGauge(
-                        pointers: [
-                          Pointer(
-                            pointerPosition: PointerPosition.top,
-                            shape: PointerShape.triangle,
-                            value: humid,
-                            color: Colors.blue,
-                          ),
-                        ],
-                        gaugeOrientation: GaugeOrientation.horizontal,
-                        valueBar: [
-                          ValueBar(
-                            color: Colors.blue,
-                            value: humid,
-                            offset: 20,
-                            position: ValueBarPosition.top,
-                          )
-                        ],
-                        enableGaugeAnimation: true,
-                        rulers: RulerStyle(
-                          rulerPosition: RulerPosition.bottom,
-                          showLabel: true,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                PrettyGauge(
+                                  showMarkers: true,
+                                  gaugeSize: 125,
+                                  segments: [
+                                    GaugeSegment('DRY', 20, Colors.red),
+                                    GaugeSegment('NORMAL', 40, Colors.green),
+                                    GaugeSegment('WET', 40, Colors.blue),
+                                  ],
+                                  currentValue: hum.toDouble(),
+                                  displayWidget: const Text(
+                                    'HUMIDITY',
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                ),
+                                Container(
+                                  width: 75,
+                                  height: 75,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Center(
+                                    child: TextBold(
+                                        text: '${hum.toStringAsFixed(2)}%',
+                                        fontSize: 18,
+                                        color: Colors.grey),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            LinearGauge(
+                              pointers: [
+                                Pointer(
+                                  pointerPosition: PointerPosition.top,
+                                  shape: PointerShape.triangle,
+                                  value: hum.toDouble(),
+                                  color: Colors.blue,
+                                ),
+                              ],
+                              gaugeOrientation: GaugeOrientation.horizontal,
+                              valueBar: [
+                                ValueBar(
+                                  color: Colors.blue,
+                                  value: hum.toDouble(),
+                                  offset: 20,
+                                  position: ValueBarPosition.top,
+                                )
+                              ],
+                              enableGaugeAnimation: true,
+                              rulers: RulerStyle(
+                                rulerPosition: RulerPosition.bottom,
+                                showLabel: true,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    TextBold(
+                      text: 'SYSTEM CONTROL',
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    ButtonWidget(
+                      radius: 100,
+                      color: Colors.black,
+                      label: status ? 'ON' : 'OFF',
+                      onPressed: () async {
+                        if (status) {
+                          DatabaseReference ref =
+                              FirebaseDatabase.instance.ref("System_Status");
+
+// Only update the name, leave the age and address!
+                          await ref.update({
+                            "SS_bool": false,
+                          });
+                        } else {
+                          DatabaseReference ref =
+                              FirebaseDatabase.instance.ref("System_Status");
+
+// Only update the name, leave the age and address!
+                          await ref.update({
+                            "SS_bool": true,
+                          });
+                        }
+
+                        setState(() {
+                          hasLoaded = false;
+                        });
+                        getData();
+
+                        // Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        //     builder: (context) => const HomeScreen()));
+                      },
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(
-                height: 50,
-              ),
-              TextBold(
-                text: 'SYSTEM CONTROL',
-                fontSize: 18,
-                color: Colors.black,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ButtonWidget(
-                radius: 100,
-                color: Colors.black,
-                label: control,
-                onPressed: () {
-                  if (control == 'OFF') {
-                    setState(() {
-                      control = 'ON';
-                    });
-                  } else {
-                    setState(() {
-                      control = 'OFF';
-                    });
-                  }
-                  // Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  //     builder: (context) => const HomeScreen()));
-                },
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-            ],
-          ),
-        ),
-      ),
+            )
+          : const Center(
+              child: CircularProgressIndicator(),
+            ),
     );
   }
 }
