@@ -83,58 +83,115 @@ class _HomeScreenState extends State<HomeScreen> {
                       padding: const EdgeInsets.only(left: 10, top: 10),
                       child: Align(
                         alignment: Alignment.topLeft,
-                        child: IconButton(
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                      title: const Text(
-                                        'Logout Confirmation',
-                                        style: TextStyle(
-                                            fontFamily: 'QBold',
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      content: const Text(
-                                        'Are you sure you want to Logout?',
-                                        style:
-                                            TextStyle(fontFamily: 'QRegular'),
-                                      ),
-                                      actions: <Widget>[
-                                        MaterialButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(true),
-                                          child: const Text(
-                                            'Close',
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                          title: const Text(
+                                            'Logout Confirmation',
                                             style: TextStyle(
-                                                fontFamily: 'QRegular',
+                                                fontFamily: 'QBold',
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                        ),
-                                        MaterialButton(
-                                          onPressed: () async {
-                                            await FirebaseAuth.instance
-                                                .signOut();
-                                            Navigator.of(context).pushReplacement(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const LoginScreen()));
-                                          },
-                                          child: const Text(
-                                            'Continue',
+                                          content: const Text(
+                                            'Are you sure you want to Logout?',
                                             style: TextStyle(
-                                                fontFamily: 'QRegular',
-                                                fontWeight: FontWeight.bold),
+                                                fontFamily: 'QRegular'),
                                           ),
-                                        ),
-                                      ],
-                                    ));
-                          },
-                          icon: const Icon(
-                            Icons.logout,
-                          ),
+                                          actions: <Widget>[
+                                            MaterialButton(
+                                              onPressed: () =>
+                                                  Navigator.of(context)
+                                                      .pop(true),
+                                              child: const Text(
+                                                'Close',
+                                                style: TextStyle(
+                                                    fontFamily: 'QRegular',
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                            MaterialButton(
+                                              onPressed: () async {
+                                                await FirebaseAuth.instance
+                                                    .signOut();
+                                                Navigator.of(context)
+                                                    .pushReplacement(
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                const LoginScreen()));
+                                              },
+                                              child: const Text(
+                                                'Continue',
+                                                style: TextStyle(
+                                                    fontFamily: 'QRegular',
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ],
+                                        ));
+                              },
+                              icon: const Icon(
+                                Icons.logout,
+                              ),
+                            ),
+                            temp > 35
+                                ? IconButton(
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                                title: const Text(
+                                                  'Warning!',
+                                                  style: TextStyle(
+                                                      fontFamily: 'QBold',
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                content: const Text(
+                                                  'Temperature is too High!',
+                                                  style: TextStyle(
+                                                      fontFamily: 'QRegular'),
+                                                ),
+                                                actions: <Widget>[
+                                                  MaterialButton(
+                                                    onPressed: () =>
+                                                        Navigator.of(context)
+                                                            .pop(true),
+                                                    child: const Text(
+                                                      'Close',
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'QRegular',
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ));
+                                    },
+                                    icon: Badge(
+                                      backgroundColor: Colors.red,
+                                      label: TextBold(
+                                          text: '1',
+                                          fontSize: 12,
+                                          color: Colors.white),
+                                      child: const Icon(
+                                        Icons.notifications,
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox(),
+                          ],
                         ),
                       ),
                     ),
+
                     const Divider(
                       color: Colors.black,
                     ),
