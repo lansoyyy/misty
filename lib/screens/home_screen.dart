@@ -63,8 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
       status = data['SS_bool'];
     });
 
-    getData();
-
     setState(() {
       hasLoaded = true;
     });
