@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:geekyants_flutter_gauges/geekyants_flutter_gauges.dart';
+import 'package:misty/screens/logs_screen.dart';
 import 'package:misty/widgets/text_widget.dart';
 import 'package:pretty_gauge/pretty_gauge.dart';
 import 'package:wi_custom_bar/wi_custom_bar.dart';
@@ -364,6 +365,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         // Navigator.of(context).pushReplacement(MaterialPageRoute(
                         //     builder: (context) => const HomeScreen()));
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ButtonWidget(
+                      radius: 100,
+                      color: Colors.black,
+                      label: 'Data Logs',
+                      onPressed: () async {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const LogsScreen()));
                       },
                     ),
                     const SizedBox(
