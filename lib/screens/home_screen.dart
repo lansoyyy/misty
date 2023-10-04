@@ -37,21 +37,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   getData() async {
     FirebaseDatabase.instance
-        .ref('DHT_Humidity')
+        .ref('SensorData')
         .onValue
         .listen((DatabaseEvent event) async {
       final dynamic data = event.snapshot.value;
 
-      hum = int.parse(data['Hum_Val']);
+      hum = data['Humidity'].toInt();
     });
 
     FirebaseDatabase.instance
-        .ref('DHT_Temperature')
+        .ref('SensorData')
         .onValue
         .listen((DatabaseEvent event) async {
       final dynamic data = event.snapshot.value;
 
-      temp = int.parse(data['Tempt_Val']);
+      temp = data['Temperature'].toInt();
     });
 
     FirebaseDatabase.instance
@@ -62,6 +62,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
       status = data['SS_bool'];
     });
+
+    getData();
 
     setState(() {
       hasLoaded = true;
@@ -340,6 +342,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.black,
                       label: status ? 'ON' : 'OFF',
                       onPressed: () async {
+                        print(hum);
                         if (status) {
                           DatabaseReference ref =
                               FirebaseDatabase.instance.ref("System_Status");
