@@ -55,12 +55,12 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     FirebaseDatabase.instance
-        .ref('System_Status')
+        .ref('RelayStatus')
         .onValue
         .listen((DatabaseEvent event) async {
       final dynamic data = event.snapshot.value;
 
-      status = data['SS_bool'];
+      status = data['state'];
     });
 
     setState(() {
@@ -155,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           FontWeight.bold),
                                                 ),
                                                 content: const Text(
-                                                  'Temperature is too High!',
+                                                  'Temperature is too High! Mist is Turned ON',
                                                   style: TextStyle(
                                                       fontFamily: 'QRegular'),
                                                 ),
@@ -343,19 +343,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         print(hum);
                         if (status) {
                           DatabaseReference ref =
-                              FirebaseDatabase.instance.ref("System_Status");
+                              FirebaseDatabase.instance.ref("RelayStatus");
 
 // Only update the name, leave the age and address!
                           await ref.update({
-                            "SS_bool": false,
+                            "state": false,
                           });
                         } else {
                           DatabaseReference ref =
-                              FirebaseDatabase.instance.ref("System_Status");
+                              FirebaseDatabase.instance.ref("RelayStatus");
 
 // Only update the name, leave the age and address!
                           await ref.update({
-                            "SS_bool": true,
+                            "state": true,
                           });
                         }
 
