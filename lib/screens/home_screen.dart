@@ -42,7 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
         .listen((DatabaseEvent event) async {
       final dynamic data = event.snapshot.value;
 
-      hum = data['Humidity'].toInt();
+      setState(() {
+        hum = data['Humidity'].toInt();
+      });
     });
 
     FirebaseDatabase.instance
@@ -51,7 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
         .listen((DatabaseEvent event) async {
       final dynamic data = event.snapshot.value;
 
-      temp = data['Temperature'].toInt();
+      setState(() {
+        temp = data['Temperature'].toInt();
+      });
     });
 
     FirebaseDatabase.instance
@@ -66,6 +70,8 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       hasLoaded = true;
     });
+
+    setState(() {});
   }
 
   @override
@@ -340,7 +346,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.black,
                       label: status ? 'ON' : 'OFF',
                       onPressed: () async {
-                        print(hum);
                         if (status) {
                           DatabaseReference ref =
                               FirebaseDatabase.instance.ref("RelayStatus");

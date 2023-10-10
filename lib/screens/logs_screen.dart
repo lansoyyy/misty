@@ -1,4 +1,3 @@
-import 'package:chart_sparkline/chart_sparkline.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:misty/widgets/text_widget.dart';
@@ -33,15 +32,17 @@ class _LogsScreenState extends State<LogsScreen> {
         .listen((DatabaseEvent event) async {
       final dynamic data = event.snapshot.value;
 
-      hums = data['Humidity_list']
-              ['${DateTime.now().month}-$dayString-${DateTime.now().year}']
-          .values
-          .toList();
+      setState(() {
+        hums = data['Humidity_list']
+                ['${DateTime.now().month}-$dayString-${DateTime.now().year}']
+            .values
+            .toList();
 
-      temps = data['Temperature_list']
-              ['${DateTime.now().month}-$dayString-${DateTime.now().year}']
-          .values
-          .toList();
+        temps = data['Temperature_list']
+                ['${DateTime.now().month}-$dayString-${DateTime.now().year}']
+            .values
+            .toList();
+      });
     });
 
     setState(() {
@@ -158,6 +159,12 @@ class _LogsScreenState extends State<LogsScreen> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       InteractiveViewer(
+                                        panEnabled:
+                                            false, // Set it to false to prevent panning.
+                                        boundaryMargin:
+                                            const EdgeInsets.all(80),
+                                        minScale: 0.5,
+                                        maxScale: 4,
                                         child: SfCartesianChart(
                                             // Initialize category axis
                                             primaryXAxis: CategoryAxis(),
