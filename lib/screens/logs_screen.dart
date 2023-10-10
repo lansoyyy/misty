@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:misty/widgets/text_widget.dart';
 import 'package:misty/widgets/toast_widget.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:zoom_widget/zoom_widget.dart';
 
 class LogsScreen extends StatefulWidget {
   const LogsScreen({super.key});
@@ -95,43 +96,45 @@ class _LogsScreenState extends State<LogsScreen> {
                             width: double.infinity,
                             child: Padding(
                                 padding: const EdgeInsets.all(20.0),
-                                child: Center(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      InteractiveViewer(
-                                        child: SfCartesianChart(
-                                            // Initialize category axis
-                                            primaryXAxis: CategoryAxis(),
-                                            series: <LineSeries<SalesData,
-                                                String>>[
-                                              LineSeries<SalesData, String>(
-                                                  // Bind data source
-                                                  dataSource: <SalesData>[
-                                                    for (int i = 0;
-                                                        i < hums.length;
-                                                        i++)
-                                                      SalesData(
-                                                          i.toString(),
-                                                          double.parse(hums[i]
-                                                              .replaceAll(
-                                                                  '%', ''))),
-                                                  ],
-                                                  xValueMapper:
-                                                      (SalesData sales, _) =>
-                                                          sales.year,
-                                                  yValueMapper:
-                                                      (SalesData sales, _) =>
-                                                          sales.sales)
-                                            ]),
-                                      ),
-                                      TextRegular(
-                                          text:
-                                              'Data based on the last 24 hours with 10 secs interval',
-                                          fontSize: 8,
-                                          color: Colors.grey)
-                                    ],
+                                child: Zoom(
+                                  child: Center(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        InteractiveViewer(
+                                          child: SfCartesianChart(
+                                              // Initialize category axis
+                                              primaryXAxis: CategoryAxis(),
+                                              series: <LineSeries<SalesData,
+                                                  String>>[
+                                                LineSeries<SalesData, String>(
+                                                    // Bind data source
+                                                    dataSource: <SalesData>[
+                                                      for (int i = 0;
+                                                          i < hums.length;
+                                                          i++)
+                                                        SalesData(
+                                                            i.toString(),
+                                                            double.parse(hums[i]
+                                                                .replaceAll(
+                                                                    '%', ''))),
+                                                    ],
+                                                    xValueMapper:
+                                                        (SalesData sales, _) =>
+                                                            sales.year,
+                                                    yValueMapper:
+                                                        (SalesData sales, _) =>
+                                                            sales.sales)
+                                              ]),
+                                        ),
+                                        TextRegular(
+                                            text:
+                                                'Data based on the last 24 hours with 10 secs interval',
+                                            fontSize: 8,
+                                            color: Colors.grey)
+                                      ],
+                                    ),
                                   ),
                                 ))),
                       ),
@@ -153,19 +156,13 @@ class _LogsScreenState extends State<LogsScreen> {
                             width: double.infinity,
                             child: Padding(
                                 padding: const EdgeInsets.all(20.0),
-                                child: Center(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      InteractiveViewer(
-                                        panEnabled:
-                                            false, // Set it to false to prevent panning.
-                                        boundaryMargin:
-                                            const EdgeInsets.all(80),
-                                        minScale: 0.5,
-                                        maxScale: 4,
-                                        child: SfCartesianChart(
+                                child: Zoom(
+                                  child: Center(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        SfCartesianChart(
                                             // Initialize category axis
                                             primaryXAxis: CategoryAxis(),
                                             series: <LineSeries<SalesData,
@@ -189,13 +186,13 @@ class _LogsScreenState extends State<LogsScreen> {
                                                       (SalesData sales, _) =>
                                                           sales.sales)
                                             ]),
-                                      ),
-                                      TextRegular(
-                                          text:
-                                              'Data based on the last 24 hours with 10 secs interval',
-                                          fontSize: 8,
-                                          color: Colors.grey)
-                                    ],
+                                        TextRegular(
+                                            text:
+                                                'Data based on the last 24 hours with 10 secs interval',
+                                            fontSize: 8,
+                                            color: Colors.grey)
+                                      ],
+                                    ),
                                   ),
                                 ))),
                       ),
